@@ -1,11 +1,10 @@
-'use strict';
-
 const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
+const cloudUpload = require('../services/cloudinary-upload');
 
 const validUsername = (req, res, next) => {
     User.find({username: req.body.username})
@@ -27,6 +26,7 @@ const validUsername = (req, res, next) => {
 };
 
 router.post('/register',
+    cloudUpload('image', ['image/jpeg', 'image/jpg', 'image/png']),
     validUsername,
     (req, res) => {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -46,7 +46,11 @@ router.post('/register',
                     const user = new User({
                         username: req.body.username,
                         password: hash,
-                        roles
+                        roles,
+                        profilePicture: req.body.imageUrl || 'https://res.cloudinary.com/dr8ovbzd2/image/upload/v1534048322/no-user.png',
+                        followers: [],
+                        following: [],
+                        posts: []
                     });
 
                     user.save()
