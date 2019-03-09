@@ -4,6 +4,7 @@ const fileUpload = require('express-fileupload');
 
 const usersRoute = require('./api/routes/users');
 const postsRoute = require('./api/routes/posts');
+const adminRoute = require('./api/routes/admin');
 const mongodbConfig = require('./config/mongodb-config');
 const cloudinaryConfig = require('./config/cloudinary-config');
 
@@ -33,5 +34,6 @@ app.use((req, res, next) => {
 
 app.use('/users', usersRoute);
 app.use('/posts', postsRoute);
+app.use('/admin', adminRoute);
 
 app.listen(port, () => console.log(`Listening on port ${port}!`));
